@@ -17,7 +17,7 @@ function EncryptStringAES(text) {
     }
 
 }
-
+//sifreleyip local storage set  item yaparken bu şifrelemeyi kullanıyoruz.👆
 function DecryptStringAES(text) {
     if (text != null) {
         var key = CryptoJS.enc.Utf8.parse('8080808080808080');
@@ -36,7 +36,7 @@ function DecryptStringAES(text) {
 
     }
 }
-
+//local storageden get item yaparken bu şifrelemeyi kullanıyoruz👆
 const showLoading = () => {
     loading.style.display = "block";
 }
