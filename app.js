@@ -17,11 +17,12 @@ form.addEventListener("submit", (e) => {
     //target vs. currentTarget target yakaladığı elementi döndürür.currentTarget yakaladığı elementin en yakın parentini döndürür.
     //e.currentTarget.reset();
 });
-//local storageden get item yapıp şifrelediğimiz api key çağırırken bunu kullanıyoruz👆(getWeatherDataFromApi)
+//local storageden get item yapıp şifrelediğimiz api key çağırırken bunu kullanıyoruz👇(getWeatherDataFromApi)(DecryptStringAES)
 
 
 const getWeatherDataFromApi = async () => {
     const apiKey = DecryptStringAES(localStorage.getItem("apiKey"));
+
     console.log(apiKey);
     const cityName = input.value;
     const units = "metric";
@@ -36,17 +37,18 @@ const getWeatherDataFromApi = async () => {
         const response = await axios(url);
         console.log(response);
 
-        //obj. destructuring
+        //obj. destructuring responseın içinden yani gelen cevap içinden neleri ayrıştıtıp kullanacağım bunu destructring yaparak alıyorum.
         const { main, name, sys, weather } = response.data;
-
+     //weatherapi sayfasında icon veren url👇
         const iconUrl = `http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
-
+      //hocanın bulduğu icon veren url
         const iconUrlAWS = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${weather[0].icon}.svg`;
         console.log(response);
-
+//aynı şehir yazılmış mı yazılmamış mı kontrol ediyoruz.yukarıda tanımladığımız list in içindeki spanları seçtik içinde gezeceğiz.
         const cityNameSpans = list.querySelectorAll("span");
         //filter, map, reduce, forEach ==> array
         //forEach => nodeList
+        //[...] bu üç nokta yani spread oparetörü dizi yapıyor
         if (cityNameSpans.length > 0) {
             const filteredArray = [...cityNameSpans].filter(span => span.innerText == name);
             if (filteredArray.length > 0) {
@@ -55,6 +57,8 @@ const getWeatherDataFromApi = async () => {
                 return;
             }
         }
+
+
         const createdLi = document.createElement("li");
         createdLi.classList.add("city");
         createdLi.innerHTML =
@@ -62,12 +66,15 @@ const getWeatherDataFromApi = async () => {
                 <span>${name}</span>
                 <sup>${sys.country}</sup>
           </h2>
+          
           <div class="city-temp">${Math.round(main.temp)}<sup>°C</sup></div>
           <figure>
                 <img class="city-icon" src="${iconUrlAWS}">
                 <figcaption>${weather[0].description}</figcaption>
           </figure>`;
-        //append vs. prepend
+          //figure semantik element olduğu için aramalarda üst sıraya çıkma konusunda +puan veriyor.👆
+        //append vs. prepend  ***append yaparsam son aradığım en sonda kalıyor. ***prepend yaparsam son aradığım başta kalıyor.
+        //math round en yakın tam sayıya yuvarlar.
         list.prepend(createdLi);
 
         //Capturing => parent to child
